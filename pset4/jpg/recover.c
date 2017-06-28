@@ -1,0 +1,60 @@
+/**
+ * Copies a BMP piece by piece, just because.
+ */
+#include <cs50.h>
+#include <string.h>       
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <ctype.h>
+
+int main(void)
+{
+    
+    char *infile = "card.raw"; //называем входящий-исходящий
+        //открываем файл карты с проверкой
+   FILE* inf = fopen(infile, "r");
+   if (inf == NULL)
+    {
+        fprintf(stderr, "Could not open \n");
+        return 2;
+    }
+
+    //открываем выходной файл
+    FILE *outf ;
+
+    uint8_t tmp[512]; // создаем буфер по 512 байт
+    int count = 0;              //считалка файлов
+   
+    while(fread(tmp, 512, 1, inf) > 0)//пока не закончится карта
+    {
+        //fread(&tmp, sizeof(tmp), 1, inf); //начинаем считывать  по 512 байтов из карты памяти
+        
+        if ((tmp[0] == 0xff && tmp[1] == 0xd8 && tmp[2] == 0xff) && (tmp[3] == 0xe0 || tmp[3] == 0xe1))     // если первые четыре байта совпадают
+        {  
+            if(count!=0)
+            fclose(outf); //закрываем старый файл
+        
+            count ++;   
+          
+            //и создаем его    
+            char filename[8];
+         //  printf("%s", filename);
+           sprintf(filename, "%03d.jpg", count-1);
+    
+            char *outfile = filename;
+             outf = fopen(outfile, "w");  //открываем новый файл для записи с проверкой
+    
+        }
+            if(count!=0)
+            fwrite(&tmp, sizeof(tmp), 1, outf) ;  // и начинаем записывать эти 512 байт в новый файл или продолжаем в старый
+            
+    }
+        
+        fclose(outf); //закрываем последний файл
+        fclose(inf); 
+        
+        //делаем проверку контрольной суммы
+    // success
+    return 0;
+}

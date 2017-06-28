@@ -1,0 +1,3 @@
+clang crack.c -o crack -lcrypt
+
+//получилось найти только rofl. andi не находит . 
