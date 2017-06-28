@@ -1,0 +1,2 @@
+US	34034	APO		AA	Dillon	033			33.0364	-82.2493	1
+US	99553	Akutan	Alaska	AK	Aleutians East	013			54.143	-165.7854	1
